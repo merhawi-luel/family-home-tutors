@@ -1,13 +1,24 @@
-// app/announcements/page.tsx
 "use client";
+
 import { useEffect, useState } from "react";
 
 export default function AnnouncementsPage() {
   const [jobs, setJobs] = useState<any[]>([]);
 
+  // Fetch from API
+  const fetchJobs = async () => {
+    try {
+      const res = await fetch("/api/jobs");
+      const data = await res.json();
+      setJobs(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Failed to fetch jobs:", err);
+      setJobs([]);
+    }
+  };
+
   useEffect(() => {
-    const savedJobs = JSON.parse(localStorage.getItem("tutor_jobs") || "[]");
-    setJobs(savedJobs);
+    fetchJobs();
   }, []);
 
   return (
@@ -33,21 +44,21 @@ export default function AnnouncementsPage() {
               className="bg-gray-800 p-8 rounded-3xl shadow-lg border border-gray-700 flex flex-col md:flex-row justify-between items-start md:items-center transition hover:scale-105 hover:shadow-2xl"
             >
               <div className="flex-1">
-                {/* Title */}
                 <h3 className="text-2xl font-bold text-white mb-3">{job.title}</h3>
 
-                {/* Badges: Grade & Gender */}
                 <div className="flex flex-wrap gap-3 mb-3">
                   <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                     {job.grade}
                   </span>
-                  <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${
-                    job.gender === "Male"
-                      ? "bg-blue-400 text-white"
-                      : job.gender === "Female"
-                      ? "bg-pink-500 text-white"
-                      : "bg-green-500 text-white"
-                  }`}>
+                  <span
+                    className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${
+                      job.gender === "Male"
+                        ? "bg-blue-400 text-white"
+                        : job.gender === "Female"
+                        ? "bg-pink-500 text-white"
+                        : "bg-green-500 text-white"
+                    }`}
+                  >
                     {job.gender}
                   </span>
                   <span className="bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">
@@ -55,14 +66,11 @@ export default function AnnouncementsPage() {
                   </span>
                 </div>
 
-                {/* Description */}
                 <p className="text-slate-300 mb-4 leading-relaxed max-w-xl">{job.description}</p>
 
-                {/* Pay */}
                 <p className="text-blue-400 font-bold text-lg">Payment: {job.pay}</p>
               </div>
 
-              {/* Apply Button */}
               <a
                 href="https://forms.google.com"
                 target="_blank"

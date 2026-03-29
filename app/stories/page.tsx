@@ -1,14 +1,36 @@
-// app/stories/page.tsx
 "use client";
 import { useEffect, useState } from "react";
 
 export default function StoriesPage() {
   const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem("tutor_stories") || "[]");
-    setPosts(savedPosts);
+    const fetchStories = async () => {
+      try {
+        const res = await fetch("/api/stories");
+        if (!res.ok) throw new Error("Failed to fetch stories");
+        const data = await res.json();
+        setPosts(data);
+      } catch (err: any) {
+        console.error("Error fetching stories:", err);
+        setError("Failed to load stories. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStories();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white text-lg">
+        Loading stories...
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-r from-[#0a0a0a] via-[#111827] to-[#1e293b] min-h-screen py-20 px-6">
@@ -22,7 +44,9 @@ export default function StoriesPage() {
         </p>
       </div>
 
-      {posts.length === 0 ? (
+      {error ? (
+        <p className="text-red-500 text-center">{error}</p>
+      ) : posts.length === 0 ? (
         <p className="text-slate-400 italic text-center">
           No stories have been shared yet...
         </p>
