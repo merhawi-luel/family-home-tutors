@@ -72,7 +72,7 @@ export default function AnnouncementsPage() {
               </div>
 
               <a
-                href="https://forms.google.com"
+                href="https://forms.gle/Ro2ge4CUaVLf5UgA8"
                 target="_blank"
                 className="mt-6 md:mt-0 bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg"
               >
