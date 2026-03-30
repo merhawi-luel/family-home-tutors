@@ -16,7 +16,7 @@ export default function ContactPage() {
 
     emailjs
       .sendForm(
-        "service_99kd7fu",
+        "service_cp63fpf",
         "template_vccjpdp",
         formRef.current,
         "zsw-avBr1m_HIDJl3"
